@@ -1,4 +1,5 @@
 #include <ft_script.h>
+#include <errno.h>
 
 int	get_next_pty_name(char current[11])
 {
@@ -48,21 +49,18 @@ int	child(int pipe_to_read, char **envp)
 	char	sbuffer[11];
 	int	fd;
 
+
 	setsid();
+
 	// write(pipe_to_read, "caca", 4);
 	read(pipe_to_read, sbuffer, 10);
 	close(pipe_to_read);
 	fd = open(sbuffer, O_RDWR);
-	close(1);
-	dup(fd);
-	// printf("coucou\n");
-	// dprintf(fd, "pouet\n");
-	execve("/usr/bin/tty", (char*[]){"/bin/ls", NULL}, envp);
-	// ioctl(-, TIOCSTART);
-	// printf("mfd : %s\n", ttyname(mfd));
-	// dprintf(sfd, "pouet! mfd = %d, sfd = %d\n", mfd, sfd);
-	// dprintf(mfd, "pouet! mfd = %d, sfd = %d\n", mfd, sfd);
-      //
+	dup2(fd, 0);
+	dup2(fd, 1);
+	dup2(fd, 2);
+
+	execve("/bin/bash", (char*[]){"/bin/bash", NULL}, envp);
 	exit(0);
 }
 
@@ -72,19 +70,49 @@ int	parent(int pipe_to_write)
 	int	mfd;
 	char	mbuffer[11];
 	char	sbuffer[11];
-	char	buffer[2048];
+	char	obuffer[8192];
+	char	ibuffer[8192];
+	int	flg1;
+	int	flg2;
 
 	if (open_ttys(mbuffer, sbuffer, &mfd) == 0)
 		return (0);
+
 	write(pipe_to_write, sbuffer, 10);
 	close(pipe_to_write);
-	// while(1)
-	// {
-		if ((r = read(mfd, buffer, 2047)) == -1)
-			return (0);
-		buffer[r] = '\0';
-		printf("[%s]\n", buffer);
-	// }
+	flg1 = fcntl(mfd, F_GETFL, 0);
+	fcntl(mfd, F_SETFL, flg1 | O_NONBLOCK);
+
+	flg2 = fcntl(0, F_GETFL, 0);
+	fcntl(0, F_SETFL, flg2 | O_NONBLOCK);
+
+	while(1)
+	{
+
+		while (1)
+		{
+			r = read(mfd, obuffer, 8192);
+			if (r == -1 && errno == EAGAIN)
+				break;
+			else if (r == -1)
+				return (0);
+			else if (r == 0)
+				break;
+			write(1, obuffer, r);
+		}
+
+		while (1)
+		{
+			r = read(0, ibuffer, 8192);
+			if (r == -1 && errno == EAGAIN)
+				break;
+			else if (r == -1)
+				return (0);
+			else if (r == 0)
+				break;
+			write(mfd, ibuffer, r);
+		}
+	}
 	exit(0);
 	return (1);
 }
@@ -96,6 +124,11 @@ int main(int ac, char **av, char **envp)
 
 	int	pid;
 	int	pipes[2] = {0, 0};
+
+	printf("isatty_main : %d\n", isatty(0));
+	printf("isatty_main : %d\n", isatty(1));
+	printf("isatty_main : %d\n", isatty(2));
+
 
 	if (pipe(pipes) == -1)
 	{
