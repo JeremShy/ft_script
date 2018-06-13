@@ -1,5 +1,7 @@
+
 #include <ft_script.h>
 #include <errno.h>
+#include <termios.h>
 
 int	get_next_pty_name(char current[11])
 {
@@ -48,17 +50,24 @@ int	child(int pipe_to_read, char **envp)
 {
 	char	sbuffer[11];
 	int	fd;
+	struct winsize w;
 
 
 	setsid();
 
 	// write(pipe_to_read, "caca", 4);
+	ioctl(0, TIOCGSIZE, &w);
+
 	read(pipe_to_read, sbuffer, 10);
 	close(pipe_to_read);
 	fd = open(sbuffer, O_RDWR);
+
+
 	dup2(fd, 0);
 	dup2(fd, 1);
 	dup2(fd, 2);
+
+	ioctl(0, TIOCSSIZE, &w);
 
 	execve("/bin/bash", (char*[]){"/bin/bash", NULL}, envp);
 	exit(0);
@@ -68,16 +77,20 @@ int	parent(int pipe_to_write)
 {
 	int	r;
 	int	mfd;
+
 	char	mbuffer[11];
 	char	sbuffer[11];
-	char	obuffer[8192];
-	char	ibuffer[8192];
+	char	obuffer[5];
+	char	ibuffer[5];
 	int	flg1;
 	int	flg2;
 
+	struct termios	old;
+	struct termios	new;
+
+
 	if (open_ttys(mbuffer, sbuffer, &mfd) == 0)
 		return (0);
-
 	write(pipe_to_write, sbuffer, 10);
 	close(pipe_to_write);
 	flg1 = fcntl(mfd, F_GETFL, 0);
@@ -86,12 +99,18 @@ int	parent(int pipe_to_write)
 	flg2 = fcntl(0, F_GETFL, 0);
 	fcntl(0, F_SETFL, flg2 | O_NONBLOCK);
 
+
+	ioctl(0, TIOCGETA, &old);
+	new = old;
+	new.c_lflag &= ~ECHO;
+	new.c_lflag &= ~ICANON;
+	ioctl(0, TIOCSETA, &new);
+
 	while(1)
 	{
-
 		while (1)
 		{
-			r = read(mfd, obuffer, 8192);
+			r = read(mfd, obuffer, 5);
 			if (r == -1 && errno == EAGAIN)
 				break;
 			else if (r == -1)
@@ -100,10 +119,9 @@ int	parent(int pipe_to_write)
 				break;
 			write(1, obuffer, r);
 		}
-
 		while (1)
 		{
-			r = read(0, ibuffer, 8192);
+			r = read(0, ibuffer, 5);
 			if (r == -1 && errno == EAGAIN)
 				break;
 			else if (r == -1)
