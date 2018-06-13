@@ -6,8 +6,6 @@
 # include <sys/ioctl.h>
 # include <unistd.h>
 # include <termios.h>
-
-# include <stdio.h> // A retirer
-
+# include <signal.h>
 
 #endif

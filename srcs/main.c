@@ -34,10 +34,8 @@ int	get_next_pty_name(char current[11])
 int	open_ttys(char mbuffer[11], char sbuffer[11], int *mfd)
 {
 	ft_strcpy(mbuffer, "/dev/ptyp0");
-	printf("Trying to open %s\n", mbuffer);
 	while ((*mfd = open(mbuffer, O_RDWR)) == -1)
 	{
-		printf("Tried to open %s\n", mbuffer);
 		if (get_next_pty_name(mbuffer) == 0)
 			return (0);
 	}
@@ -79,10 +77,9 @@ int	parent(int pipe_to_write)
 
 	char	mbuffer[11];
 	char	sbuffer[11];
-	char	obuffer[5];
-	char	ibuffer[5];
-	int	flg1;
-	int	flg2;
+	char	obuffer[2048];
+	char	ibuffer[2048];
+	int	pid;
 
 	struct termios	old;
 	struct termios	new;
@@ -92,12 +89,6 @@ int	parent(int pipe_to_write)
 		return (0);
 	write(pipe_to_write, sbuffer, 10);
 	close(pipe_to_write);
-	flg1 = fcntl(mfd, F_GETFL, 0);
-	fcntl(mfd, F_SETFL, flg1 | O_NONBLOCK);
-
-	flg2 = fcntl(0, F_GETFL, 0);
-	fcntl(0, F_SETFL, flg2 | O_NONBLOCK);
-
 
 	ioctl(0, TIOCGETA, &old);
 	new = old;
@@ -105,32 +96,30 @@ int	parent(int pipe_to_write)
 	new.c_lflag &= ~ICANON;
 	ioctl(0, TIOCSETA, &new);
 
-	while(1)
+	pid = fork();
+	if (pid == 0)
 	{
 		while (1)
 		{
-			r = read(mfd, obuffer, 5);
-			if (r == -1 && errno == EAGAIN)
-				break;
-			else if (r == -1)
-				return (0);
-			else if (r == 0)
-				break;
+			r = read(mfd, obuffer, 2048);
+			if (r == -1)
+				exit (4);
 			write(1, obuffer, r);
 		}
+		exit(1);
+	}
+	else
+	{
 		while (1)
 		{
-			r = read(0, ibuffer, 5);
-			if (r == -1 && errno == EAGAIN)
-				break;
-			else if (r == -1)
-				return (0);
-			else if (r == 0)
-				break;
+			r = read(0, ibuffer, 2048);
+			if (r == -1)
+				exit (5);
 			write(mfd, ibuffer, r);
 		}
+		exit(2);
 	}
-	exit(0);
+	exit(3);
 	return (1);
 }
 
@@ -141,11 +130,6 @@ int main(int ac, char **av, char **envp)
 
 	int	pid;
 	int	pipes[2] = {0, 0};
-
-	printf("isatty_main : %d\n", isatty(0));
-	printf("isatty_main : %d\n", isatty(1));
-	printf("isatty_main : %d\n", isatty(2));
-
 
 	if (pipe(pipes) == -1)
 	{
