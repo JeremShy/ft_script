@@ -55,7 +55,6 @@ int	child(int pipe_to_read, char **envp)
 
 	setsid();
 
-	// write(pipe_to_read, "caca", 4);
 	ioctl(0, TIOCGSIZE, &w);
 
 	read(pipe_to_read, sbuffer, 10);
