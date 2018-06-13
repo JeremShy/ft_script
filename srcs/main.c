@@ -1,7 +1,33 @@
-
 #include <ft_script.h>
 #include <errno.h>
 #include <termios.h>
+
+void handler(int a)
+{
+	(void)a;
+	exit(0);
+}
+
+void	ignore_signals(void)
+{
+	int	i;
+	struct sigaction new;
+
+	i = 1;
+	new.sa_handler = SIG_IGN;
+	while (i <= 31)
+	{
+		if (i == SIGCHLD)
+		{
+			new.sa_handler = handler;
+			sigaction(i, &new, NULL);
+			new.sa_handler = SIG_IGN;
+		}
+		else
+			sigaction(i, &new, NULL);
+		i++;
+	}
+}
 
 int	get_next_pty_name(char current[11])
 {
@@ -51,8 +77,6 @@ int	child(int pipe_to_read, char **envp)
 	struct winsize w;
 
 
-	setsid();
-
 	ioctl(0, TIOCGSIZE, &w);
 
 	read(pipe_to_read, sbuffer, 10);
@@ -84,7 +108,7 @@ int	parent(int pipe_to_write)
 	struct termios	old;
 	struct termios	new;
 
-
+	ignore_signals();
 	if (open_ttys(mbuffer, sbuffer, &mfd) == 0)
 		return (0);
 	write(pipe_to_write, sbuffer, 10);
