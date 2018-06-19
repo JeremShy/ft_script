@@ -82,22 +82,23 @@ int	child(int pipe_to_read, char **envp)
 	char	sbuffer[11];
 	int	fd;
 	struct winsize w;
+	struct termios old;
 
-
+	ioctl(0, TIOCGETA, &old);
 	ioctl(0, TIOCGSIZE, &w);
 
 	read(pipe_to_read, sbuffer, 10);
 	close(pipe_to_read);
 	fd = open(sbuffer, O_RDWR);
 
-
 	dup2(fd, 0);
 	dup2(fd, 1);
 	dup2(fd, 2);
 
 	ioctl(0, TIOCSSIZE, &w);
+	ioctl(0, TIOCSETA, &old);
 
-	execve("/bin/zsh", (char*[]){"/bin/zsh", NULL}, envp);
+	execve("/bin/bash", (char*[]){"/bin/bash", NULL}, envp);
 	exit(0);
 }
 
@@ -126,6 +127,7 @@ int	parent(int pipe_to_write)
 	new.c_lflag &= ~ECHO;
 	new.c_lflag &= ~ICANON;
 	ioctl(0, TIOCSETA, &new);
+
 
 	pid = fork();
 	if (pid == 0) // child2
