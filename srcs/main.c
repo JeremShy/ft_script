@@ -97,7 +97,7 @@ int	child(int pipe_to_read, char **envp)
 
 	ioctl(0, TIOCSSIZE, &w);
 
-	execve("/bin/bash", (char*[]){"/bin/bash", NULL}, envp);
+	execve("/bin/zsh", (char*[]){"/bin/zsh", NULL}, envp);
 	exit(0);
 }
 
@@ -128,7 +128,7 @@ int	parent(int pipe_to_write)
 	ioctl(0, TIOCSETA, &new);
 
 	pid = fork();
-	if (pid == 0) // child
+	if (pid == 0) // child2
 	{
 		while (1)
 		{
@@ -173,10 +173,9 @@ int main(int ac, char **av, char **envp)
 
 	if (pid != 0)	// Parent
 	{
-		printf("First child : %d\n", pid);
 		parent(pipes[1]);
 	}
-	else			// Child
+	else			// Child1
 	{
 		child(pipes[0], envp);
 	}
