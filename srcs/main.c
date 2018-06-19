@@ -4,7 +4,14 @@
 
 void handler(int a)
 {
-	(void)a;
+	static int	to_kill = 0;
+
+	if (to_kill == 0)
+	{
+		to_kill = a;
+		return;
+	}
+	kill(to_kill, SIGKILL);
 	exit(0);
 }
 
@@ -121,7 +128,7 @@ int	parent(int pipe_to_write)
 	ioctl(0, TIOCSETA, &new);
 
 	pid = fork();
-	if (pid == 0)
+	if (pid == 0) // child
 	{
 		while (1)
 		{
@@ -130,10 +137,10 @@ int	parent(int pipe_to_write)
 				exit (4);
 			write(1, obuffer, r);
 		}
-		exit(1);
 	}
-	else
+	else // Parent
 	{
+		handler(pid);
 		while (1)
 		{
 			r = read(0, ibuffer, 2048);
@@ -141,10 +148,7 @@ int	parent(int pipe_to_write)
 				exit (5);
 			write(mfd, ibuffer, r);
 		}
-		exit(2);
 	}
-	exit(3);
-	return (1);
 }
 
 int main(int ac, char **av, char **envp)
@@ -169,6 +173,7 @@ int main(int ac, char **av, char **envp)
 
 	if (pid != 0)	// Parent
 	{
+		printf("First child : %d\n", pid);
 		parent(pipes[1]);
 	}
 	else			// Child
