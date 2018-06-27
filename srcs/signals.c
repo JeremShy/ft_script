@@ -11,7 +11,7 @@ void	handler(int a)
 	}
 	kill(to_kill, SIGKILL);
 	ioctl(0, TIOCSETA, singelton_tty(NULL));
-	exit(87);
+	_exit(87);
 }
 
 void	ignore_signals(void)

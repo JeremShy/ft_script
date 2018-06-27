@@ -7,7 +7,7 @@ struct termios	*singelton_tty(struct termios *old)
 
 	if (i == 0)
 	{
-		save = *old;
+		ft_memcpy(&save, old, sizeof(save));
 		i = 1;
 	}
 	return &save;

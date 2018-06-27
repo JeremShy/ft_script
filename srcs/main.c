@@ -51,7 +51,7 @@ int	parent(int pipe_to_write)
 
 	ioctl(0, TIOCGETA, &old);
 	singelton_tty(&old);
-	new = old;
+	ft_memcpy(&new, &old, sizeof(new));
 	new.c_lflag &= ~ECHO;
 	new.c_lflag &= ~ICANON;
 	new.c_lflag &= ~ISIG;
@@ -95,8 +95,9 @@ int main(int ac, char **av, char **envp)
 	(void)av;
 
 	int	pid;
-	int	pipes[2] = {0, 0};
+	int	pipes[2];
 
+	ft_bzero(&pipes, sizeof(pipes));
 	if (pipe(pipes) == -1)
 	{
 		ft_putstr_fd("Error while piping.\n", 2);
