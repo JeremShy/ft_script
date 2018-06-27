@@ -10,7 +10,8 @@ void	handler(int a)
 		return;
 	}
 	kill(to_kill, SIGKILL);
-	exit(0);
+	ioctl(0, TIOCSETA, singelton_tty(NULL));
+	exit(87);
 }
 
 void	ignore_signals(void)

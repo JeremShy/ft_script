@@ -50,6 +50,7 @@ int	parent(int pipe_to_write)
 	close(pipe_to_write);
 
 	ioctl(0, TIOCGETA, &old);
+	singelton_tty(&old);
 	new = old;
 	new.c_lflag &= ~ECHO;
 	new.c_lflag &= ~ICANON;
@@ -64,7 +65,10 @@ int	parent(int pipe_to_write)
 		{
 			r = read(mfd, obuffer, 2048);
 			if (r == -1)
-				exit (4);
+			{
+				ioctl(0, TIOCSETA, &old);
+				_exit (4);
+			}
 			write(1, obuffer, r);
 		}
 	}
@@ -75,7 +79,10 @@ int	parent(int pipe_to_write)
 		{
 			r = read(0, ibuffer, 2048);
 			if (r == -1)
-				exit (5);
+			{
+				ioctl(0, TIOCSETA, &old);
+				_exit (5);
+			}
 			write(fd, ibuffer, r);
 			write(mfd, ibuffer, r);
 		}
