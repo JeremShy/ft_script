@@ -7,7 +7,7 @@ int	child(int pipe_to_read, char **envp)
 	struct winsize w;
 	struct termios old;
 
-	setpgid(getpid(), getpgrp());
+	setsid();
 
 	ioctl(0, TIOCGETA, &old);
 	ioctl(0, TIOCGSIZE, &w);
@@ -16,15 +16,17 @@ int	child(int pipe_to_read, char **envp)
 	close(pipe_to_read);
 	fd = open(sbuffer, O_RDWR);
 
+	ioctl(fd, TIOCSCTTY, 0);
+
 	dup2(fd, 0);
 	dup2(fd, 1);
 	dup2(fd, 2);
 
 	ioctl(0, TIOCSSIZE, &w);
 	ioctl(0, TIOCSETA, &old);
+	close(fd);
 
-	execve("/bin/bash", (char*[]){"/bin/bash", NULL}, envp);
-	exit(0);
+	return (execve("/bin/bash", (char*[]){"/bin/bash", NULL}, envp));
 }
 
 int	parent(int pipe_to_write)
@@ -51,9 +53,11 @@ int	parent(int pipe_to_write)
 	new = old;
 	new.c_lflag &= ~ECHO;
 	new.c_lflag &= ~ICANON;
+	new.c_lflag &= ~ISIG;
 	ioctl(0, TIOCSETA, &new);
 
 	pid = fork();
+	int fd = open("/tmp/a", O_WRONLY | O_CREAT | O_TRUNC, 0444);
 	if (pid == 0) // child2
 	{
 		while (1)
@@ -72,6 +76,7 @@ int	parent(int pipe_to_write)
 			r = read(0, ibuffer, 2048);
 			if (r == -1)
 				exit (5);
+			write(fd, ibuffer, r);
 			write(mfd, ibuffer, r);
 		}
 	}
