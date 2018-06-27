@@ -1,81 +1,4 @@
 #include <ft_script.h>
-#include <errno.h>
-#include <termios.h>
-
-void handler(int a)
-{
-	static int	to_kill = 0;
-
-	if (to_kill == 0)
-	{
-		to_kill = a;
-		return;
-	}
-	kill(to_kill, SIGKILL);
-	exit(0);
-}
-
-void	ignore_signals(void)
-{
-	int	i;
-	struct sigaction new;
-
-	i = 1;
-	new.sa_handler = SIG_IGN;
-	while (i <= 31)
-	{
-		if (i == SIGCHLD)
-		{
-			new.sa_handler = handler;
-			sigaction(i, &new, NULL);
-			new.sa_handler = SIG_IGN;
-		}
-		else
-			sigaction(i, &new, NULL);
-		i++;
-	}
-}
-
-int	get_next_pty_name(char current[11])
-{
-	char	*letter;
-	char	*nbr;
-
-	 letter = current + 8;
-	 nbr = current + 9;
-	 if (*nbr != '9')
-	 {
-		 (*nbr)++;
-		 return (1);
-	 }
-	 else if (*letter != 'z' && *letter != 'e')
-	 {
-		 *nbr = '0';
-		 (*letter)++;
-		 return (1);
-	 }
-	 else if (*letter == 'z')
-	 {
-		 *nbr = '0';
-		 (*letter) = 'a';
-		 return (1);
-	 }
-	 else
-		 return (0);
-}
-
-int	open_ttys(char mbuffer[11], char sbuffer[11], int *mfd)
-{
-	ft_strcpy(mbuffer, "/dev/ptyp0");
-	while ((*mfd = open(mbuffer, O_RDWR)) == -1)
-	{
-		if (get_next_pty_name(mbuffer) == 0)
-			return (0);
-	}
-	ft_strcpy(sbuffer, mbuffer);
-	sbuffer[5] = 't';
-	return (1);
-}
 
 int	child(int pipe_to_read, char **envp)
 {
@@ -83,6 +6,8 @@ int	child(int pipe_to_read, char **envp)
 	int	fd;
 	struct winsize w;
 	struct termios old;
+
+	setpgid(getpid(), getpgrp());
 
 	ioctl(0, TIOCGETA, &old);
 	ioctl(0, TIOCGSIZE, &w);
@@ -127,7 +52,6 @@ int	parent(int pipe_to_write)
 	new.c_lflag &= ~ECHO;
 	new.c_lflag &= ~ICANON;
 	ioctl(0, TIOCSETA, &new);
-
 
 	pid = fork();
 	if (pid == 0) // child2

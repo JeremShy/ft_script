@@ -1,4 +1,6 @@
-SRC_NAME = main.c
+SRC_NAME = main.c \
+		ttys.c \
+		signals.c
 
 OBJ_PATH = ./obj/
 
