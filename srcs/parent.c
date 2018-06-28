@@ -66,6 +66,8 @@ int	parent(int pipe_to_write, t_opt *opt, int child_pid)
 				ioctl(0, TIOCSETA, &old);
 				_exit (5);
 			}
+			if (opt->options & K_OPT)
+				write(fd, ibuffer, r);
 			write(mfd, ibuffer, r);
 		}
 	}

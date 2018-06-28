@@ -7,6 +7,7 @@
 # include <termios.h>
 # include <signal.h>
 # include <stdio.h>
+# include <errno.h>
 
 # define D_OPT (1<<0)
 # define F_OPT (1<<1)
@@ -27,7 +28,7 @@ typedef struct	s_opt {
 	int			open_flags;
 	int			flush_interval;
 	char		*output_file;
-	const char	**argv;
+	char		**argv;
 	t_m_args	default_args;
 }				t_opt;
 
@@ -51,5 +52,7 @@ void			reset_terminal();
 
 int				parent(int pipe_to_write, t_opt *opt, int child_pid);
 int				child(int pipe_to_read, t_opt *opt);
+
+char			 *get_shell(char **envp);
 
 #endif

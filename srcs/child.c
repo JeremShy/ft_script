@@ -6,6 +6,7 @@ int	child(int pipe_to_read, t_opt *opt)
 	int	fd;
 	struct winsize w;
 	struct termios old;
+	char	*shell;
 
 	setsid();
 
@@ -26,5 +27,17 @@ int	child(int pipe_to_read, t_opt *opt)
 	ioctl(0, TIOCSETA, &old);
 	close(fd);
 
-	return (execve("/bin/bash", (char*[]){"/bin/bash", NULL}, opt->default_args.envp));
+	if (opt->argv == NULL)
+	{
+		shell = get_shell(opt->default_args.envp);
+		fd = execve(shell, (char*[]){shell, NULL}, opt->default_args.envp);
+	}
+	else
+	{
+		shell = opt->argv[0];
+		fd = execve(opt->argv[0], opt->argv, opt->default_args.envp);
+	}
+	ft_putstr_fd(shell, 2);
+	ft_putstr_fd(": Error while trying to exec this file.\n", 2);
+	return (0);
 }
