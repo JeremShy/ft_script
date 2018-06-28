@@ -10,24 +10,24 @@ int8_t	is_option(char c)
 
 int8_t	is_parametrized_option(char c)
 {
-	if (c == 'F' || c == 't')
+	if (c == 't')
 		return (1);
 	return (0);
 }
 
 int	get_bit_for_option(char c)
 {
-	if (c == 'D')
+	if (c == 'd')
 		return (D_OPT);
 	if (c == 'F')
 		return (F_OPT);
-	if (c == 'K')
+	if (c == 'k')
 		return (K_OPT);
-	if (c == 'P')
+	if (c == 'p')
 		return (P_OPT);
-	if (c == 'Q')
+	if (c == 'q')
 		return (Q_OPT);
-	if (c == 'R')
+	if (c == 'r')
 		return (R_OPT);
 	return (0);
 }
@@ -38,5 +38,5 @@ void	init_opt(t_opt *opt)
 	opt->output_file = "typescript";
 	opt->open_flags = 0;
 	opt->flush_interval = 30;
-	opt->argv = (char*[2]){"/bin/bash", NULL};
+	opt->argv = NULL;
 }

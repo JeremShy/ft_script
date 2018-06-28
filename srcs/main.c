@@ -7,7 +7,13 @@ int main(int ac, char **av, char **envp)
 	t_opt	options;
 
 	if (!parse(ac, av, envp, &options))
+	{
+		printf("ERRRROOORR\n");
+		print_options(&options);
 		return (1);
+	}
+	print_options(&options);
+	return (0);
 
 	ft_bzero(&pipes, sizeof(pipes));
 	if (pipe(pipes) == -1)

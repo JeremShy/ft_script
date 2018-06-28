@@ -6,6 +6,7 @@
 # include <unistd.h>
 # include <termios.h>
 # include <signal.h>
+# include <stdio.h>
 
 # define D_OPT (1<<0)
 # define F_OPT (1<<1)
@@ -23,16 +24,18 @@ typedef struct s_m_args
 
 typedef struct	s_opt {
 	int8_t	options;
-	char	*output_file;
 	int		open_flags;
 	int		flush_interval;
-	char	**argv;
+	char	*output_file;
+	const char	**argv;
 }				t_opt;
 
 void			init_opt(t_opt *opt);
 int8_t			is_option(char c);
 int8_t			is_parametrized_option(char c);
 int				get_bit_for_option(char c);
+
+void	print_options(t_opt *opt);
 
 int				parse(int ac, char **av, char **envp, t_opt *opt);
 
