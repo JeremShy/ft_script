@@ -47,5 +47,6 @@ int	child(int pipe_to_read, t_opt *opt)
 	ft_putstr_fd(shell, 2);
 	ft_putstr_fd(": Error while trying to exec this file.\n", 2);
 	perror("");
+	_exit(88);
 	return (0);
 }

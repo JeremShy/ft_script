@@ -66,7 +66,8 @@ int	finish_parsing(t_m_args *m_args, int i, t_opt *opt)
 	else
 		opt->output_file = m_args->av[i];
 	i++;
-	opt->argv = m_args->av + i;
+	if (m_args->av[i])
+		opt->argv = m_args->av + i;
 	return (1);
 }
 
