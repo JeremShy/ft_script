@@ -4,6 +4,7 @@ SRC_NAME = main.c \
 		singelton.c \
 		parent.c \
 		child.c \
+		parsing_helpers.c \
 		parsing.c
 
 OBJ_PATH = ./obj/
