@@ -61,7 +61,12 @@ int parse_argument(t_m_args *m_args, int *i, t_opt *opt)
 
 int	finish_parsing(t_m_args *m_args, int i, t_opt *opt)
 {
-	// Finish parsing ignoring options-looking arguments
+	if (m_args->av[i] == NULL)
+		return (1);
+	else
+		opt->output_file = m_args->av[i];
+	i++;
+	opt->argv = (const char**)m_args->av + i;
 	return (1);
 }
 
@@ -78,9 +83,7 @@ int parse(int ac, char **av, char **envp, t_opt *opt)
 		if (av[i][0] == '-')
 		{
 			if (ft_strequ(av[i], "--"))
-			{
 				return (finish_parsing(&m_args, i + 1, opt));
-			}
 			else
 			{
 				if (!parse_argument(&m_args, &i, opt))
@@ -88,9 +91,7 @@ int parse(int ac, char **av, char **envp, t_opt *opt)
 			}
 		}
 		else
-		{
 			return (finish_parsing(&m_args, i, opt));
-		}
 		i++;
 	}
 	return (1);
