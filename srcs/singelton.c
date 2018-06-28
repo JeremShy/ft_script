@@ -12,3 +12,8 @@ struct termios	*singelton_tty(struct termios *old)
 	}
 	return &save;
 }
+
+void	reset_terminal()
+{
+	ioctl(0, TIOCSETA, singelton_tty(NULL));
+}

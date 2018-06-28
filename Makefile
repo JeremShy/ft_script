@@ -1,7 +1,9 @@
 SRC_NAME = main.c \
 		ttys.c \
 		signals.c \
-		singelton.c
+		singelton.c \
+		parent.c \
+		child.c
 
 OBJ_PATH = ./obj/
 
