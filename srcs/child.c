@@ -1,6 +1,6 @@
 #include <ft_script.h>
 
-int	child(int pipe_to_read, char **envp)
+int	child(int pipe_to_read, t_opt *opt)
 {
 	char	sbuffer[11];
 	int	fd;
@@ -26,5 +26,5 @@ int	child(int pipe_to_read, char **envp)
 	ioctl(0, TIOCSETA, &old);
 	close(fd);
 
-	return (execve("/bin/bash", (char*[]){"/bin/bash", NULL}, envp));
+	return (execve("/bin/bash", (char*[]){"/bin/bash", NULL}, opt->default_args.envp));
 }

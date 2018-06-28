@@ -1,6 +1,6 @@
 #include <ft_script.h>
 
-int	parent(int pipe_to_write)
+int	parent(int pipe_to_write, t_opt *opt, int child_pid)
 {
 	int	r;
 	int	mfd;
@@ -13,6 +13,8 @@ int	parent(int pipe_to_write)
 
 	struct termios	old;
 	struct termios	new;
+
+	int		fd;
 
 	ignore_signals();
 	if (open_ttys(mbuffer, sbuffer, &mfd) == 0)
@@ -28,8 +30,17 @@ int	parent(int pipe_to_write)
 	new.c_lflag &= ~ISIG;
 	ioctl(0, TIOCSETA, &new);
 
+	fd = open(opt->output_file, opt->open_flags, 0644);
+	if (fd == -1)
+	{
+		ft_putstr_fd(opt->output_file, 2);
+		ft_putstr_fd(": Can't open file.\n", 2);
+		reset_terminal();
+		kill(child_pid, SIGKILL);
+		_exit(1);
+	}
+
 	pid = fork();
-	int fd = open("/tmp/a", O_WRONLY | O_CREAT | O_TRUNC, 0444);
 	if (pid == 0) // child2
 	{
 		while (1)

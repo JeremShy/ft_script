@@ -32,11 +32,12 @@ int	get_bit_for_option(char c)
 	return (0);
 }
 
-void	init_opt(t_opt *opt)
+void	init_opt(t_opt *opt, int ac, char **av, char **envp)
 {
 	opt->options = 0;
 	opt->output_file = "typescript";
-	opt->open_flags = 0;
+	opt->open_flags = O_WRONLY | O_CREAT | O_TRUNC;
 	opt->flush_interval = 30;
 	opt->argv = NULL;
+	ft_memcpy(&opt->default_args, &(t_m_args){ac, av, envp}, sizeof(opt->default_args));
 }

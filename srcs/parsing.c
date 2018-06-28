@@ -3,7 +3,7 @@
 void	apply_simple_option(char option, t_opt *opt)
 {
 	if (option == 'a')
-		opt->open_flags |= O_APPEND;
+		opt->open_flags = O_WRONLY | O_CREAT | O_APPEND;
 	else
 		opt->options |= (get_bit_for_option(option));
 }
@@ -73,25 +73,23 @@ int	finish_parsing(t_m_args *m_args, int i, t_opt *opt)
 int parse(int ac, char **av, char **envp, t_opt *opt)
 {
 	int	i;
-	t_m_args m_args;
 
-	ft_memcpy(&m_args, &(t_m_args){ac, av, envp}, sizeof(m_args));
-	init_opt(opt);
+	init_opt(opt, ac, av, envp);
 	i = 1;
 	while (i < ac)
 	{
 		if (av[i][0] == '-')
 		{
 			if (ft_strequ(av[i], "--"))
-				return (finish_parsing(&m_args, i + 1, opt));
+				return (finish_parsing(&(opt->default_args), i + 1, opt));
 			else
 			{
-				if (!parse_argument(&m_args, &i, opt))
+				if (!parse_argument(&(opt->default_args), &i, opt))
 					return (0);
 			}
 		}
 		else
-			return (finish_parsing(&m_args, i, opt));
+			return (finish_parsing(&(opt->default_args), i, opt));
 		i++;
 	}
 	return (1);
