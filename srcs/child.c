@@ -6,7 +6,7 @@ int	child(int pipe_to_read, t_opt *opt)
 	int	fd;
 	struct winsize w;
 	struct termios old;
-	char	*shell;
+	char	shell[1024];
 
 	setsid();
 
@@ -29,15 +29,23 @@ int	child(int pipe_to_read, t_opt *opt)
 
 	if (opt->argv == NULL)
 	{
-		shell = get_shell(opt->default_args.envp);
+		ft_strncpy(shell, get_shell(opt->default_args.envp), sizeof(shell));
 		fd = execve(shell, (char*[]){shell, NULL}, opt->default_args.envp);
 	}
 	else
 	{
-		shell = opt->argv[0];
-		fd = execve(opt->argv[0], opt->argv, opt->default_args.envp);
+		if (opt->argv[0][0] == '/')
+			ft_strncpy(shell, opt->argv[0], 1024);
+		else if (!find_in_path(opt->argv[0], opt->default_args.envp, shell))
+		{
+			ft_putstr_fd(opt->argv[0], 2);
+			ft_putstr_fd(": No such file or directory.\n", 2);
+			return (0);
+		}
+		fd = execve(shell, opt->argv, opt->default_args.envp);
 	}
 	ft_putstr_fd(shell, 2);
 	ft_putstr_fd(": Error while trying to exec this file.\n", 2);
+	perror("");
 	return (0);
 }

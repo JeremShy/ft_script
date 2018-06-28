@@ -30,7 +30,7 @@ int	parent(int pipe_to_write, t_opt *opt, int child_pid)
 	new.c_lflag &= ~ISIG;
 	ioctl(0, TIOCSETA, &new);
 
-	fd = open(opt->output_file, opt->open_flags, 0644);
+	fd = open(opt->output_file, opt->open_flags | O_CLOEXEC, 0644);
 	if (fd == -1)
 	{
 		ft_putstr_fd(opt->output_file, 2);

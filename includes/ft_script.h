@@ -53,6 +53,7 @@ void			reset_terminal();
 int				parent(int pipe_to_write, t_opt *opt, int child_pid);
 int				child(int pipe_to_read, t_opt *opt);
 
-char			 *get_shell(char **envp);
+char			*get_shell(char **envp);
+int				find_in_path(char *file, char **envp, char buffer[1024]);
 
 #endif

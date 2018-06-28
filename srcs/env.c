@@ -28,10 +28,32 @@ char	*get_path(char **envp)
 	return (NULL);
 }
 
-char *find_in_path(char *file, char **envp, char buffer[1024])
+void	build_path(char *path, char *filename, char buffer[1024]) // Assumes strlen(path) + strlen(filename) + 1 <= 1024.
 {
-	char *path;
+	size_t	len;
+
+	ft_strcpy(buffer, path);
+	len = ft_strlen(path);
+	buffer[len] = '/';
+	ft_strcpy(buffer + len + 1, filename);
+}
+
+int find_in_path(char *file, char **envp, char buffer[1024])
+{
+	char 	*path;
+	char	*ptr;
 
 	path = get_path(envp);
-	return NULL;
+	while ((ptr = ft_strchr(path, ':')))
+	{
+		*ptr = '\0';
+		if (ft_strlen(path) + ft_strlen(file) + 1 <= 1024)
+		{
+			build_path(path, file, buffer);
+			if (access(buffer, X_OK) == 0)
+				return (1);
+		}
+		path = ptr + 1;
+	}
+	return (0);
 }
