@@ -7,6 +7,30 @@
 # include <termios.h>
 # include <signal.h>
 
+# define D_OPT (1<<0)
+# define F_OPT (1<<1)
+# define K_OPT (1<<2)
+# define P_OPT (1<<3)
+# define Q_OPT (1<<4)
+# define R_OPT (1<<5)
+
+typedef struct s_m_args
+{
+	int			ac;
+	char		**av;
+	char		**envp;
+}				t_m_args;
+
+typedef struct	s_opt {
+	char	options;
+	char	*output_file;
+	int		open_flags;
+	int		flush_interval;
+	char	**argv;
+}				t_opt;
+
+int parse(int ac, char **av, char **envp, t_opt *opt);
+
 void			handler(int a);
 void			ignore_signals(void);
 

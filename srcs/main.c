@@ -2,11 +2,12 @@
 
 int main(int ac, char **av, char **envp)
 {
-	(void)ac;
-	(void)av;
+	int		pid;
+	int		pipes[2];
+	t_opt	options;
 
-	int	pid;
-	int	pipes[2];
+	if (!parse(ac, av, envp, &options))
+		return (1);
 
 	ft_bzero(&pipes, sizeof(pipes));
 	if (pipe(pipes) == -1)
@@ -18,7 +19,7 @@ int main(int ac, char **av, char **envp)
 	if (pid == -1)
 	{
 		ft_putstr_fd("Error while forking.\n", 2);
-		return (1);
+		return (3);
 	}
 
 	if (pid != 0)	// Parent

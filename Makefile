@@ -3,7 +3,8 @@ SRC_NAME = main.c \
 		signals.c \
 		singelton.c \
 		parent.c \
-		child.c
+		child.c \
+		parsing.c
 
 OBJ_PATH = ./obj/
 
