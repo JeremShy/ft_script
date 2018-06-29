@@ -5,27 +5,27 @@ int	get_next_pty_name(char current[11])
 	char	*letter;
 	char	*nbr;
 
-	 letter = current + 8;
-	 nbr = current + 9;
-	 if (*nbr != '9')
-	 {
-		 (*nbr)++;
-		 return (1);
-	 }
-	 else if (*letter != 'z' && *letter != 'e')
-	 {
-		 *nbr = '0';
-		 (*letter)++;
-		 return (1);
-	 }
-	 else if (*letter == 'z')
-	 {
-		 *nbr = '0';
-		 (*letter) = 'a';
-		 return (1);
-	 }
-	 else
-		 return (0);
+	letter = current + 8;
+	nbr = current + 9;
+	if (*nbr != '9')
+	{
+		(*nbr)++;
+		return (1);
+	}
+	else if (*letter != 'z' && *letter != 'e')
+	{
+		*nbr = '0';
+		(*letter)++;
+		return (1);
+	}
+	else if (*letter == 'z')
+	{
+		*nbr = '0';
+		(*letter) = 'a';
+		return (1);
+	}
+	else
+		return (0);
 }
 
 int	open_ttys(char mbuffer[11], char sbuffer[11], int *mfd)

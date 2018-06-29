@@ -5,12 +5,9 @@ int	child(int pipe_to_read, t_opt *opt)
 	char	sbuffer[11];
 	int	fd;
 	struct winsize w;
-	struct termios old;
 	char	shell[1024];
 
 	setsid();
-
-	ioctl(0, TIOCGETA, &old);
 	ioctl(0, TIOCGSIZE, &w);
 
 	read(pipe_to_read, sbuffer, 10);
@@ -24,7 +21,6 @@ int	child(int pipe_to_read, t_opt *opt)
 	dup2(fd, 2);
 
 	ioctl(0, TIOCSSIZE, &w);
-	ioctl(0, TIOCSETA, &old);
 	close(fd);
 
 	if (opt->argv == NULL)
@@ -42,6 +38,7 @@ int	child(int pipe_to_read, t_opt *opt)
 			ft_putstr_fd(": No such file or directory.\n", 2);
 			return (0);
 		}
+		printf("HERE.\n");
 		fd = execve(shell, opt->argv, opt->default_args.envp);
 	}
 	ft_putstr_fd(shell, 2);

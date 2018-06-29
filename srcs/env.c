@@ -51,8 +51,12 @@ int find_in_path(char *file, char **envp, char buffer[1024])
 		{
 			build_path(path, file, buffer);
 			if (access(buffer, X_OK) == 0)
+			{
+				*ptr = ':';
 				return (1);
+			}
 		}
+		*ptr = ':';
 		path = ptr + 1;
 	}
 	return (0);
