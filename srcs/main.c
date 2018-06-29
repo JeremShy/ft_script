@@ -8,6 +8,7 @@ int main(int ac, char **av, char **envp)
 
 	if (!parse(ac, av, envp, &opt))
 		return (1);
+	print_options(&opt);
 	ft_bzero(&pipes, sizeof(pipes));
 	if (pipe(pipes) == -1)
 	{
