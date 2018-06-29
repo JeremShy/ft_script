@@ -9,6 +9,9 @@
 # include <stdio.h>
 # include <errno.h>
 
+# include <time.h>
+# include <sys/time.h>
+
 # define D_OPT (1<<0)
 # define F_OPT (1<<1)
 # define K_OPT (1<<2)
@@ -37,7 +40,7 @@ int8_t			is_option(char c);
 int8_t			is_parametrized_option(char c);
 int				get_bit_for_option(char c);
 
-void	print_options(t_opt *opt);
+void			print_options(t_opt *opt);
 
 int				parse(int ac, char **av, char **envp, t_opt *opt);
 
@@ -49,6 +52,8 @@ int				open_ttys(char mbuffer[11], char sbuffer[11], int *mfd);
 
 struct termios	*singelton_tty(struct termios *old);
 void			reset_terminal();
+
+void			write_time(int fd, char *started_or_done);
 
 int				parent(int pipe_to_write, t_opt *opt, int child_pid);
 int				child(int pipe_to_read, t_opt *opt);

@@ -47,13 +47,9 @@ int parse_argument(t_m_args *m_args, int *i, t_opt *opt)
 			return (0);
 		}
 		if (is_parametrized_option(m_args->av[*i][j]))
-		{
 			return (apply_parametrized_option(m_args, i, opt, j));
-		}
 		else
-		{
 			apply_simple_option(m_args->av[*i][j], opt);
-		}
 		j++;
 	}
 	return (1);

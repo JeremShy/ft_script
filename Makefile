@@ -6,7 +6,8 @@ SRC_NAME = main.c \
 		child.c \
 		parsing_helpers.c \
 		parsing.c \
-		env.c
+		env.c \
+		writes.c
 
 OBJ_PATH = ./obj/
 

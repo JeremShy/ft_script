@@ -38,7 +38,6 @@ int	child(int pipe_to_read, t_opt *opt)
 			ft_putstr_fd(": No such file or directory.\n", 2);
 			return (0);
 		}
-		printf("HERE.\n");
 		fd = execve(shell, opt->argv, opt->default_args.envp);
 	}
 	ft_putstr_fd(shell, 2);
