@@ -13,7 +13,16 @@ struct termios	*singelton_tty(struct termios *old)
 	return &save;
 }
 
-void	reset_terminal()
+void			reset_terminal()
 {
 	ioctl(0, TIOCSETA, singelton_tty(NULL));
+}
+
+int				output_file_singelton(int param)
+{
+	static int	fd = -1;
+
+	if (fd == -1)
+		fd = param;
+	return fd;
 }

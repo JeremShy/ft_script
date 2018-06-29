@@ -1,5 +1,5 @@
 #include <ft_script.h>
- 
+
 int		parent(int pipe_to_write, t_opt *opt, int child_pid)
 {
 	int	r;
@@ -42,7 +42,11 @@ int		parent(int pipe_to_write, t_opt *opt, int child_pid)
 
 	if (!(opt->options & Q_OPT))
 	{
+		output_file_singelton(fd);
+		write_started_message("started", opt->output_file);
 		write_time(fd, "started");
+		if (opt->argv)
+			write_command(fd, opt->argv);
 	}
 	pid = fork();
 	if (pid == 0) // child2

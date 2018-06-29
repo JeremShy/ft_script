@@ -52,8 +52,11 @@ int				open_ttys(char mbuffer[11], char sbuffer[11], int *mfd);
 
 struct termios	*singelton_tty(struct termios *old);
 void			reset_terminal();
+int				output_file_singelton(int param);
 
 void			write_time(int fd, char *started_or_done);
+void			write_command(int fd, char **argv);
+void			write_started_message(char *started_or_done, char *output_file);
 
 int				parent(int pipe_to_write, t_opt *opt, int child_pid);
 int				child(int pipe_to_read, t_opt *opt);
