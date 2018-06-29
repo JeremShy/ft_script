@@ -6,7 +6,6 @@ static int	prepare_parent(int pipe_to_write, int *mfd, struct termios *old)
 	char	sbuffer[11];
 	struct termios	new;
 
-
 	ignore_signals();
 	if (open_ttys(mbuffer, sbuffer, mfd) == 0)
 		return (0);

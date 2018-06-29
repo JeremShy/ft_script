@@ -1,6 +1,6 @@
 #include <ft_script.h>
 
-int	get_next_pty_name(char current[11])
+static int	get_next_pty_name(char current[11])
 {
 	char	*letter;
 	char	*nbr;

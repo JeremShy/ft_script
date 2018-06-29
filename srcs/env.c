@@ -14,7 +14,7 @@ char	*get_shell(char **envp)
 	return (NULL);
 }
 
-char	*get_path(char **envp)
+static char	*get_path(char **envp)
 {
 	int	i;
 
@@ -28,7 +28,7 @@ char	*get_path(char **envp)
 	return (NULL);
 }
 
-void	build_path(char *path, char *filename, char buffer[1024]) // Assumes strlen(path) + strlen(filename) + 1 <= 1024.
+static void	build_path(char *path, char *filename, char buffer[1024]) // Assumes strlen(path) + strlen(filename) + 1 <= 1024.
 {
 	size_t	len;
 
