@@ -58,6 +58,9 @@ void			write_time(int fd, char *started_or_done);
 void			write_command(int fd, char **argv);
 void			write_started_message(char *started_or_done, char *output_file);
 
+void			command_user_multiplex(int mfd, int fd, struct termios *old);
+void			user_command_multiplex(int mfd, int fd, struct termios *old, t_opt *opt);
+
 int				parent(int pipe_to_write, t_opt *opt, int child_pid);
 int				child(int pipe_to_read, t_opt *opt);
 

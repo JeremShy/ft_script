@@ -3,6 +3,7 @@ SRC_NAME = main.c \
 		signals.c \
 		singelton.c \
 		parent.c \
+		parent_multiplex.c \
 		child.c \
 		parsing_helpers.c \
 		parsing.c \

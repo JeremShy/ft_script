@@ -1,45 +1,44 @@
 #include <ft_script.h>
 
-int		parent(int pipe_to_write, t_opt *opt, int child_pid)
+static int	prepare_parent(int pipe_to_write, int *mfd, struct termios *old)
 {
-	int	r;
-	int	mfd;
-
 	char	mbuffer[11];
 	char	sbuffer[11];
-	char	obuffer[2048];
-	char	ibuffer[2048];
-	int	pid;
-
-	struct termios	old;
 	struct termios	new;
 
-	int		fd;
 
 	ignore_signals();
-	if (open_ttys(mbuffer, sbuffer, &mfd) == 0)
+	if (open_ttys(mbuffer, sbuffer, mfd) == 0)
 		return (0);
 	write(pipe_to_write, sbuffer, 10);
 	close(pipe_to_write);
 
-	ioctl(0, TIOCGETA, &old);
-	singelton_tty(&old);
-	ft_memcpy(&new, &old, sizeof(new));
+	ioctl(0, TIOCGETA, old);
+	singelton_tty(old);
+	ft_memcpy(&new, old, sizeof(new));
 	new.c_lflag &= ~ECHO;
 	new.c_lflag &= ~ICANON;
 	new.c_lflag &= ~ISIG;
 	ioctl(0, TIOCSETA, &new);
+	return (1);
+}
 
-	fd = open(opt->output_file, opt->open_flags | O_CLOEXEC, 0644);
-	if (fd == -1)
-	{
-		ft_putstr_fd(opt->output_file, 2);
-		ft_putstr_fd(": Can't open file.\n", 2);
-		reset_terminal();
-		kill(child_pid, SIGKILL);
-		_exit(1);
-	}
+static void	kill_child_and_exit(int child_pid)
+{
+	kill(child_pid, SIGKILL);
+	_exit(1);
+}
 
+static void	print_and_exit_bad_open(char *output_file, int child_pid)
+{
+	ft_putstr_fd(output_file, 2);
+	ft_putstr_fd(": Can't open file.\n", 2);
+	reset_terminal();
+	kill_child_and_exit(child_pid);
+}
+
+static void	print_message_if_needed(int fd, t_opt *opt)
+{
 	if (!(opt->options & Q_OPT))
 	{
 		output_file_singelton(fd);
@@ -48,35 +47,30 @@ int		parent(int pipe_to_write, t_opt *opt, int child_pid)
 		if (opt->argv)
 			write_command(fd, opt->argv);
 	}
+}
+
+int			parent(int pipe_to_write, t_opt *opt, int child_pid)
+{
+	int				mfd;
+	int				pid;
+	struct termios	old;
+	int				fd;
+
+	if (!prepare_parent(pipe_to_write, &mfd, &old))
+		kill_child_and_exit(child_pid);
+	fd = open(opt->output_file, opt->open_flags | O_CLOEXEC, 0644);
+	if (fd == -1)
+		print_and_exit_bad_open(opt->output_file, child_pid);
+	print_message_if_needed(fd, opt);
 	pid = fork();
-	if (pid == 0) // child2
-	{
-		while (1)
-		{
-			r = read(mfd, obuffer, 2048);
-			if (r == -1)
-			{
-				ioctl(0, TIOCSETA, &old);
-				_exit (4);
-			}
-			write(fd, obuffer, r);
-			write(1, obuffer, r);
-		}
-	}
-	else // Parent
+	if (pid == -1)
+		kill_child_and_exit(child_pid);
+	if (pid == 0)
+		command_user_multiplex(mfd, fd, &old);
+	else
 	{
 		handler(pid);
-		while (1)
-		{
-			r = read(0, ibuffer, 2048);
-			if (r == -1)
-			{
-				ioctl(0, TIOCSETA, &old);
-				_exit (5);
-			}
-			if (opt->options & K_OPT)
-				write(fd, ibuffer, r);
-			write(mfd, ibuffer, r);
-		}
+		user_command_multiplex(mfd, fd, &old, opt);
 	}
+	return (1);
 }
