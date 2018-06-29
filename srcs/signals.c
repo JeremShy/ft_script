@@ -10,6 +10,11 @@ void	handler(int a)
 		return;
 	}
 	kill(to_kill, SIGKILL);
+	write_started_message("done", NULL);
+	write(output_file_singelton(0), "\n", 1);
+	write(1, "\n", 1);
+
+	write_time(output_file_singelton(0), "done");
 	reset_terminal();
 	_exit(87);
 }

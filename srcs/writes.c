@@ -15,10 +15,17 @@ void	write_time(int fd, char *started_or_done)
 
 void	write_started_message(char *started_or_done, char *output_file)
 {
+	static char *stat = NULL;
+
+	if (!stat)
+		stat = output_file;
 	write(1, "Script ", 7);
 	write(1, started_or_done, ft_strlen(started_or_done));
 	write(1, ", output file is ", 17);
-	write(1, output_file, ft_strlen(output_file));
+	if (output_file)
+		write(1, output_file, ft_strlen(output_file));
+	else
+		write(1, stat, ft_strlen(stat));
 	write(1, "\n", 1);
 }
 
