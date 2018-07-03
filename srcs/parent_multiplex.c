@@ -32,7 +32,15 @@ void	user_command_multiplex(int mfd, int fd, struct termios *old, t_opt *opt)
 			_exit (5);
 		}
 		if (opt->options & K_OPT)
-			write(fd, ibuffer, r);
+		{
+			if (r > 0 && ibuffer[r - 1] == '\n')
+			{
+				write(fd, ibuffer, r - 1);
+				write(fd, "\r", 1);
+			}
+			else
+				write(fd, ibuffer, r);
+		}
 		write(mfd, ibuffer, r);
 	}
 }
