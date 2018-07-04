@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing_helpers.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jcamhi <jcamhi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/07/04 16:43:34 by jcamhi            #+#    #+#             */
+/*   Updated: 2018/07/04 16:43:35 by jcamhi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <ft_script.h>
 
 int8_t	is_option(char c)
@@ -15,7 +27,7 @@ int8_t	is_parametrized_option(char c)
 	return (0);
 }
 
-int	get_bit_for_option(char c)
+int		get_bit_for_option(char c)
 {
 	if (c == 'd')
 		return (D_OPT);
@@ -39,5 +51,6 @@ void	init_opt(t_opt *opt, int ac, char **av, char **envp)
 	opt->open_flags = O_WRONLY | O_CREAT | O_TRUNC;
 	opt->flush_interval = 30;
 	opt->argv = NULL;
-	ft_memcpy(&opt->default_args, &(t_m_args){ac, av, envp}, sizeof(opt->default_args));
+	ft_memcpy(&opt->default_args, &(t_m_args){ac, av, envp},
+		sizeof(opt->default_args));
 }
