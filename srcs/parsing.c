@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jcamhi <jcamhi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/07/04 16:44:38 by jcamhi            #+#    #+#             */
+/*   Updated: 2018/07/04 16:44:42 by jcamhi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <ft_script.h>
 
 static void	apply_simple_option(char option, t_opt *opt)
@@ -8,7 +20,8 @@ static void	apply_simple_option(char option, t_opt *opt)
 		opt->options |= (get_bit_for_option(option));
 }
 
-static int	apply_parametrized_option(t_m_args *m_args, int *i, t_opt *opt, int j)
+static int	apply_parametrized_option(t_m_args *m_args, int *i,
+	t_opt *opt, int j)
 {
 	if (m_args->av[*i][j + 1] != '\0')
 		opt->flush_interval = ft_atoi(m_args->av[*i] + j + 1);
@@ -32,7 +45,7 @@ static int	apply_parametrized_option(t_m_args *m_args, int *i, t_opt *opt, int j
 	return (1);
 }
 
-static int parse_argument(t_m_args *m_args, int *i, t_opt *opt)
+static int	parse_argument(t_m_args *m_args, int *i, t_opt *opt)
 {
 	int	j;
 
@@ -67,7 +80,7 @@ static int	finish_parsing(t_m_args *m_args, int i, t_opt *opt)
 	return (1);
 }
 
-int parse(int ac, char **av, char **envp, t_opt *opt)
+int			parse(int ac, char **av, char **envp, t_opt *opt)
 {
 	int	i;
 
@@ -90,49 +103,4 @@ int parse(int ac, char **av, char **envp, t_opt *opt)
 		i++;
 	}
 	return (1);
-}
-
-void	print_options(t_opt *opt)
-{
-	int i;
-
-	if (opt->options & D_OPT)
-		printf("D : OK\n");
-	else
-		printf("D : NOT OK\n");
-	if (opt->options & F_OPT)
-		printf("F : OK\n");
-	else
-		printf("F : NOT OK\n");
-	if (opt->options & K_OPT)
-		printf("K : OK\n");
-	else
-		printf("K : NOT OK\n");
-	if (opt->options & P_OPT)
-		printf("P : OK\n");
-	else
-		printf("P : NOT OK\n");
-	if (opt->options & Q_OPT)
-		printf("Q : OK\n");
-	else
-		printf("Q : NOT OK\n");
-	if (opt->options & R_OPT)
-		printf("R : OK\n");
-	else
-		printf("R : NOT OK\n");
-	printf("open_flags : %d\n", opt->open_flags);
-	printf("flush_interval : %d\n", opt->flush_interval);
-	printf("output_file : [%s]\n", opt->output_file);
-	printf("argv : \n");
-	if (opt->argv == NULL)
-		printf("\tDefault argv.\n");
-	else
-	{
-		i = 0;
-		while (opt->argv[i])
-		{
-			printf("\targv[%d] : %s\n", i, opt->argv[i]);
-			i++;
-		}
-	}
 }

@@ -40,8 +40,6 @@ int8_t			is_option(char c);
 int8_t			is_parametrized_option(char c);
 int				get_bit_for_option(char c);
 
-void			print_options(t_opt *opt);
-
 int				parse(int ac, char **av, char **envp, t_opt *opt);
 
 void			handler(int a);
