@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_script.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jcamhi <jcamhi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/07/04 16:47:01 by jcamhi            #+#    #+#             */
+/*   Updated: 2018/07/04 16:47:36 by jcamhi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FT_SCRIPT_H
 # define FT_SCRIPT_H
 
@@ -19,7 +31,7 @@
 # define Q_OPT (1<<4)
 # define R_OPT (1<<5)
 
-typedef struct s_m_args
+typedef struct	s_m_args
 {
 	int			ac;
 	char		**av;
@@ -56,7 +68,8 @@ void			write_command(int fd, char **argv);
 void			write_started_message(char *started_or_done, char *output_file);
 
 void			command_user_multiplex(int mfd, int fd, struct termios *old);
-void			user_command_multiplex(int mfd, int fd, struct termios *old, t_opt *opt);
+void			user_command_multiplex(int mfd, int fd, struct termios *old,
+	t_opt *opt);
 
 int				parent(int pipe_to_write, t_opt *opt, int child_pid);
 int				child(int pipe_to_read, t_opt *opt);
