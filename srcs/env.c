@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jcamhi <jcamhi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/07/04 16:41:23 by jcamhi            #+#    #+#             */
+/*   Updated: 2018/07/04 16:41:23 by jcamhi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <ft_script.h>
 
-char	*get_shell(char **envp)
+char		*get_shell(char **envp)
 {
 	int	i;
 
@@ -38,9 +50,9 @@ static void	build_path(char *path, char *filename, char buffer[1024])
 	ft_strcpy(buffer + len + 1, filename);
 }
 
-int find_in_path(char *file, char **envp, char buffer[1024])
+int			find_in_path(char *file, char **envp, char buffer[1024])
 {
-	char 	*path;
+	char	*path;
 	char	*ptr;
 
 	path = get_path(envp);
