@@ -19,8 +19,7 @@ SRC_PATH = ./srcs/
 NAME = ft_script
 
 CC = gcc
-CFLAGS =  -Wextra -Wall  -g
-# CFLAGS =  -Wextra -Wall -Werror -g
+CFLAGS =  -Wextra -Wall -Werror -g
 LFLAGS = -lft
 LIB_DIR=./lib/
 
