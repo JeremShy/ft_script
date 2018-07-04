@@ -34,7 +34,10 @@ int	open_ttys(char mbuffer[11], char sbuffer[11], int *mfd)
 	while ((*mfd = open(mbuffer, O_RDWR)) == -1)
 	{
 		if (get_next_pty_name(mbuffer) == 0)
+		{
+			ft_putstr_fd("Couldn't allocate a pseudo terminal pair.\n", 2);
 			return (0);
+		}
 	}
 	ft_strcpy(sbuffer, mbuffer);
 	sbuffer[5] = 't';

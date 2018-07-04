@@ -1,28 +1,32 @@
 #include <ft_script.h>
 
-int	child(int pipe_to_read, t_opt *opt)
+static void	init_child(int pipe_to_read)
 {
-	char	sbuffer[11];
-	int	fd;
-	struct winsize w;
-	char	shell[1024];
+	char			sbuffer[11];
+	struct winsize	w;
+	int				fd;
 
 	setsid();
 	ioctl(0, TIOCGSIZE, &w);
-
 	read(pipe_to_read, sbuffer, 10);
 	close(pipe_to_read);
 	fd = open(sbuffer, O_RDWR);
-
+	if (fd == -1)
+		_exit(1);
 	ioctl(fd, TIOCSCTTY, 0);
-
 	dup2(fd, 0);
 	dup2(fd, 1);
 	dup2(fd, 2);
-
 	ioctl(0, TIOCSSIZE, &w);
 	close(fd);
+}
 
+int			child(int pipe_to_read, t_opt *opt)
+{
+	int		fd;
+	char	shell[1024];
+
+	init_child(pipe_to_read);
 	if (opt->argv == NULL)
 	{
 		ft_strncpy(shell, get_shell(opt->default_args.envp), sizeof(shell));
@@ -40,9 +44,8 @@ int	child(int pipe_to_read, t_opt *opt)
 		}
 		fd = execve(shell, opt->argv, opt->default_args.envp);
 	}
+	ft_putstr_fd("ft_script: ", 2);
 	ft_putstr_fd(shell, 2);
-	ft_putstr_fd(": Error while trying to exec this file.\n", 2);
-	perror("");
+	ft_putstr_fd(": Permission denied\n", 2);
 	_exit(88);
-	return (0);
 }
