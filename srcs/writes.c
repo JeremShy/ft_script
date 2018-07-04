@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   writes.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jcamhi <jcamhi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/07/04 16:46:33 by jcamhi            #+#    #+#             */
+/*   Updated: 2018/07/04 16:46:34 by jcamhi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <ft_script.h>
 
 void	write_time(int fd, char *started_or_done)
@@ -7,8 +19,6 @@ void	write_time(int fd, char *started_or_done)
 	write(fd, "Script ", 7);
 	write(fd, started_or_done, ft_strlen(started_or_done));
 	write(fd, " on ", 4);
-
-
 	gettimeofday(&act_time, NULL);
 	write(fd, ctime(&(act_time.tv_sec)), 25);
 }
