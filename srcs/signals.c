@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signals.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jcamhi <jcamhi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/07/04 16:45:14 by jcamhi            #+#    #+#             */
+/*   Updated: 2018/07/04 16:45:15 by jcamhi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <ft_script.h>
 
 void	handler(int a)
@@ -7,7 +19,7 @@ void	handler(int a)
 	if (to_kill == 0)
 	{
 		to_kill = a;
-		return;
+		return ;
 	}
 	kill(to_kill, SIGKILL);
 	if (output_file_singelton(-1) != -1)
@@ -23,8 +35,8 @@ void	handler(int a)
 
 void	ignore_signals(void)
 {
-	int	i;
-	struct sigaction new;
+	int					i;
+	struct sigaction	new;
 
 	i = 1;
 	new.sa_handler = SIG_IGN;
