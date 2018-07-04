@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jcamhi <jcamhi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/07/04 16:41:51 by jcamhi            #+#    #+#             */
+/*   Updated: 2018/07/04 16:41:57 by jcamhi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <ft_script.h>
 
-int main(int ac, char **av, char **envp)
+int	main(int ac, char **av, char **envp)
 {
 	int		pid;
 	int		pipes[2];
@@ -8,7 +20,6 @@ int main(int ac, char **av, char **envp)
 
 	if (!parse(ac, av, envp, &opt))
 		return (1);
-	// print_options(&opt);
 	ft_bzero(&pipes, sizeof(pipes));
 	if (pipe(pipes) == -1)
 	{
@@ -25,6 +36,5 @@ int main(int ac, char **av, char **envp)
 		parent(pipes[1], &opt, pid);
 	else
 		child(pipes[0], &opt);
-
 	return (0);
 }
