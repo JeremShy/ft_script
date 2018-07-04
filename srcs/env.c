@@ -28,7 +28,7 @@ static char	*get_path(char **envp)
 	return (NULL);
 }
 
-static void	build_path(char *path, char *filename, char buffer[1024]) // Assumes strlen(path) + strlen(filename) + 1 <= 1024.
+static void	build_path(char *path, char *filename, char buffer[1024])
 {
 	size_t	len;
 
