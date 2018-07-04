@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ttys.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jcamhi <jcamhi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/07/04 16:46:08 by jcamhi            #+#    #+#             */
+/*   Updated: 2018/07/04 16:46:11 by jcamhi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <ft_script.h>
 
 static int	get_next_pty_name(char current[11])
@@ -28,7 +40,7 @@ static int	get_next_pty_name(char current[11])
 		return (0);
 }
 
-int	open_ttys(char mbuffer[11], char sbuffer[11], int *mfd)
+int			open_ttys(char mbuffer[11], char sbuffer[11], int *mfd)
 {
 	ft_strcpy(mbuffer, "/dev/ptyp0");
 	while ((*mfd = open(mbuffer, O_RDWR)) == -1)
