@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parent_multiplex.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jcamhi <jcamhi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/07/04 16:42:29 by jcamhi            #+#    #+#             */
+/*   Updated: 2018/07/04 16:42:29 by jcamhi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <ft_script.h>
 
 void	command_user_multiplex(int mfd, int fd, struct termios *old)
 {
 	char	obuffer[2048];
-	int	r;
+	int		r;
 
 	while (1)
 	{
@@ -11,7 +23,7 @@ void	command_user_multiplex(int mfd, int fd, struct termios *old)
 		if (r == -1)
 		{
 			ioctl(0, TIOCSETA, old);
-			_exit (4);
+			_exit(4);
 		}
 		write(fd, obuffer, r);
 		write(1, obuffer, r);
@@ -21,7 +33,7 @@ void	command_user_multiplex(int mfd, int fd, struct termios *old)
 void	user_command_multiplex(int mfd, int fd, struct termios *old, t_opt *opt)
 {
 	char	ibuffer[2048];
-	int	r;
+	int		r;
 
 	while (1)
 	{
@@ -29,7 +41,7 @@ void	user_command_multiplex(int mfd, int fd, struct termios *old, t_opt *opt)
 		if (r == -1)
 		{
 			ioctl(0, TIOCSETA, old);
-			_exit (5);
+			_exit(5);
 		}
 		if (opt->options & K_OPT)
 		{
