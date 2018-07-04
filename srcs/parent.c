@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parent.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jcamhi <jcamhi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/07/04 16:43:00 by jcamhi            #+#    #+#             */
+/*   Updated: 2018/07/04 16:43:00 by jcamhi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <ft_script.h>
 
 static int	prepare_parent(int pipe_to_write, int *mfd, struct termios *old)
 {
-	char	mbuffer[11];
-	char	sbuffer[11];
+	char			mbuffer[11];
+	char			sbuffer[11];
 	struct termios	new;
 
 	ignore_signals();
@@ -11,7 +23,6 @@ static int	prepare_parent(int pipe_to_write, int *mfd, struct termios *old)
 		return (0);
 	write(pipe_to_write, sbuffer, 10);
 	close(pipe_to_write);
-
 	ioctl(0, TIOCGETA, old);
 	singelton_tty(old);
 	ft_memcpy(&new, old, sizeof(new));
